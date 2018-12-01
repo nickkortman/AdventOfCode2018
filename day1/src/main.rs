@@ -1,7 +1,7 @@
 use std::io::{self, BufRead};
 use std::collections::HashSet;
 
-fn monitor_frequency(change: &String, frequency: &mut i128, seen_frequencies: &mut HashSet<i128>) -> bool
+fn change_frequency(change: &String, frequency: &mut i128)
 {
 	let (sign, num) = change.split_at(1);
 	let num_val = num.parse::<i128>();
@@ -17,17 +17,22 @@ fn monitor_frequency(change: &String, frequency: &mut i128, seen_frequencies: &m
 			{
 				*frequency -= value;
 			}
-
-            if seen_frequencies.contains(&*frequency)
-            {
-                println!("Repeated frequency: {}", *frequency);
-                return true;
-            }
-            seen_frequencies.insert(*frequency);
 		}
 		Err(error) => println!("Parse Error: {}", error),
 	}
+}
 
+fn monitor_frequency(change: &String, frequency: &mut i128, seen_frequencies: &mut HashSet<i128>) -> bool
+{
+	change_frequency(change, frequency);
+
+	if seen_frequencies.contains(&*frequency)
+	{
+		println!("Repeated frequency: {}", *frequency);
+		return true;
+	}
+	
+	seen_frequencies.insert(*frequency);
     false
 }
 
